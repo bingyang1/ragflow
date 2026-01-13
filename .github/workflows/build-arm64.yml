@@ -1,11 +1,11 @@
-name: Build RAGFlow 0.19.0 ARM64 Image
+name: Build RAGFlow 0.19.0 ARM64 Image (Fixed)
 
 on:
   workflow_dispatch:  # 手动触发
   push:
     branches: [ main ]
     paths:
-      - '.github/workflows/build-arm64.yml'
+      - '.github/workflows/build-arm64-fixed.yml'
 
 env:
   DOCKER_REGISTRY: ghcr.io  # 可以替换为你自己的注册表
@@ -35,6 +35,20 @@ jobs:
           registry: ${{ env.DOCKER_REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Python dependencies
+        run: |
+          pip install nltk huggingface-hub
+
+      - name: Download dependencies
+        run: |
+          # 下载所有依赖，包括Hugging Face模型
+          python download_deps.py --china-mirrors
+          
+          # 验证下载是否成功
+          ls -la
+          ls -la huggingface.co || echo "huggingface.co directory not found"
+          ls -la nltk_data || echo "nltk_data directory not found"
 
       - name: Modify pyproject.toml for ARM64
         run: |
