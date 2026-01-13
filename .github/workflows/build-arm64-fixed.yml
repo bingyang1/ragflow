@@ -43,7 +43,7 @@ jobs:
       - name: Download dependencies
         run: |
           # 下载所有依赖，包括Hugging Face模型
-          python download_deps.py --china-mirrors
+          python download_deps.py #--china-mirrors
           
           # 验证下载是否成功
           ls -la
